@@ -9,20 +9,14 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
 {
     public class GetHotelRoomBookingQuery : BasePagination, IRequest<PaginationResult<HotelRoomBookingVM>>
     {
-        public GetHotelRoomBookingQuery(DateTime date, EnumGetData getData)
+        public GetHotelRoomBookingQuery(DateTime date, EnumGetRoomData getRoomData)
         {
             Date = date;
-            GetData = getData;
+            GetRoomData = getRoomData;
         }
 
         public DateTime Date { get; }
-        public EnumGetData GetData { get; }
-
-        public enum EnumGetData
-        {
-            AllData = 1,
-            AvailableOnly
-        }
+        public EnumGetRoomData GetRoomData { get; }
     }
 
     public class GetHotelRoomBookingQueryHandler : IRequestHandler<GetHotelRoomBookingQuery, PaginationResult<HotelRoomBookingVM>>

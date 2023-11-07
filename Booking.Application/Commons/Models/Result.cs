@@ -13,8 +13,6 @@ namespace Booking.Application.Commons.Models
             ErrorCode = string.Empty;
             Path = null;
             Payload = default;
-            ExecutionTime = default;
-            ExecutionTime = null;
         }
 
         /// <summary>
@@ -56,6 +54,5 @@ namespace Booking.Application.Commons.Models
         /// <summary>
         /// Duration of Excecution
         /// </summary>
-        public TimeSpan? ExecutionTime { get; set; }
     }
 }

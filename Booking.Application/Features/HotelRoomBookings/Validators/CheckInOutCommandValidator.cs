@@ -8,6 +8,7 @@ namespace Booking.Application.Features.HotelRoomBookings.Valildators
         public CheckInOutCommandValidator()
         {
             RuleFor(x => x.Id).NotNull().NotEmpty();
+            RuleFor(x => x.CheckInOut).NotNull().NotEmpty();
         }
     }
 }

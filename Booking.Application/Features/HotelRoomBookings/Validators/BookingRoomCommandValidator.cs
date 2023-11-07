@@ -12,7 +12,6 @@ namespace Booking.Application.Features.HotelRoomBookings.Valildators
             RuleFor(x => x.NIK).NotNull().NotEmpty();
             RuleFor(x => x.BookingDate).NotNull().NotEmpty();
             RuleFor(x => x.CheckInDate).NotNull().NotEmpty();
-            RuleFor(x => x.CheckOutDate).NotNull().NotEmpty();
         }
     }
 }

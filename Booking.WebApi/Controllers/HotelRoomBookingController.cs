@@ -4,7 +4,6 @@ using Booking.Application.Features.HotelRoomBookings.Queries;
 using Booking.Application.Features.HotelRooms.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using static Booking.Application.Features.HotelRooms.Commands.CheckInOutCommand;
 
 namespace Booking.WebApi.Controllers
 {
@@ -19,18 +18,18 @@ namespace Booking.WebApi.Controllers
             return Wrapper(val: await Mediator.Send(query));
         }
 
-        [ResponseType(type: typeof(Unit), statusCode: StatusCodes.Status200OK)]
-        [HttpPost(template: "booking")]
-        public async Task<IActionResult> Booking([FromBody] BookingRoomCommand command)
-        {
-            return Wrapper(val: await Mediator.Send(command));
-        }
-
         [ResponseType(type: typeof(PaginationResult<HotelRoomBookingVM>), statusCode: StatusCodes.Status200OK)]
         [HttpGet(template: "booking-list")]
         public async Task<IActionResult> GetPageBooking([FromQuery] GetHotelRoomBookingQuery query)
         {
             return Wrapper(val: await Mediator.Send(query));
+        }
+
+        [ResponseType(type: typeof(Unit), statusCode: StatusCodes.Status200OK)]
+        [HttpPost(template: "booking")]
+        public async Task<IActionResult> Booking([FromBody] BookingRoomCommand command)
+        {
+            return Wrapper(val: await Mediator.Send(command));
         }
 
         [ResponseType(type: typeof(HotelRoomBookingVM), statusCode: StatusCodes.Status200OK)]

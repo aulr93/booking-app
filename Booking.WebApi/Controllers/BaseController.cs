@@ -46,8 +46,6 @@ namespace Booking.WebApi.Controllers
                 result.StatusCode = (int)HttpStatusCode.Created;
             }
 
-            result.ExecutionTime = DateTime.Now - _start;
-
             return Json(result);
         }
     }

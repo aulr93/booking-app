@@ -2,10 +2,10 @@
 using Booking.Application.Commons.Constants;
 using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
+using Booking.Application.Features.HotelRoomBookings.Models;
 using Booking.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Booking.Application.Features.HotelRooms.Commands.CheckInOutCommand;
 
 namespace Booking.Application.Features.HotelRooms.Commands
 {
@@ -19,12 +19,6 @@ namespace Booking.Application.Features.HotelRooms.Commands
 
         public Guid Id { get; set; }
         public EnumCheckInOut CheckInOut { get; set; }
-
-        public enum EnumCheckInOut
-        {
-            CheckIn,
-            CheckOut
-        }
     }
 
     public class CheckInOutCommandHandler : IRequestHandler<CheckInOutCommand, Unit>

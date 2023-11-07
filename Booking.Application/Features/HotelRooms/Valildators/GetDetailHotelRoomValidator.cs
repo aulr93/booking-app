@@ -1,4 +1,4 @@
-﻿using Booking.Application.Features.HotelRooms.Queries;
+﻿using Booking.Application.Features.HotelRoomBookings.Queries;
 using FluentValidation;
 
 namespace Booking.Application.Features.HotelRooms.Valildators

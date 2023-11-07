@@ -45,7 +45,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
             {
                 var isExist = await _dbContext.hotelRooms.AnyAsync(x => x.Id != request.Id && x.RoomNumber == request.RoomNumber);
                 if (isExist)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.HotelRoomNumberExist]);
+                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.RoomNoIsExist]);
 
                 var hotelRoom = await _dbContext.hotelRooms.FirstOrDefaultAsync(x => x.Id == request.Id);
                 if (hotelRoom == null)

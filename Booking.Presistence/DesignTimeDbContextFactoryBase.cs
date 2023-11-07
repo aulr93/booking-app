@@ -38,7 +38,7 @@ namespace Booking.Presistence
                 throw new ArgumentException($"Connection string '{_connectionStringName}' is null or empty.", nameof(connectionString));
 
             var optionsBuilder = new DbContextOptionsBuilder<TContext>();
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseNpgsql(connectionString);
 
             return CreateNewInstance(optionsBuilder.Options);
         }

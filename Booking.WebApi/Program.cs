@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,11 +53,32 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+string pathBase = Environment.GetEnvironmentVariable("ASPNETCORE_PATH_BASE") ?? string.Empty;
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UsePathBase(pathBase);
+
+    app.UseSwagger(c =>
+    {
+        c.PreSerializeFilters.Add((swagger, httpReq) =>
+        {
+            swagger.Servers = new List<OpenApiServer>
+            {
+                new OpenApiServer
+                {
+                    Url = !string.IsNullOrEmpty(pathBase) ? pathBase : $"{httpReq.Scheme}://{httpReq.Host.Value}"
+                }
+            };
+        });
+    });
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint($"{pathBase}/swagger/v1/swagger.json", "v1");
+        c.SwaggerEndpoint($"{pathBase}/swagger/v2/swagger.json", "v2");
+    });
 }
 
 app.UseHttpsRedirection();
