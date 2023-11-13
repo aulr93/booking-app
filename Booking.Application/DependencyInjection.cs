@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Commons.Authentications;
 using Booking.Application.Commons.Authentications.JsonWebTokens;
+using Booking.Application.Commons.Behaviours;
 using Booking.Application.Commons.Interfaces;
 using Booking.Application.Commons.Services;
 using FluentValidation;
@@ -17,8 +18,8 @@ namespace Booking.Application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
             services.AddScoped<IAuthenticationProvider, AuthenticationProvider>();
             services.AddScoped<IJwtProvider, JwtService>();

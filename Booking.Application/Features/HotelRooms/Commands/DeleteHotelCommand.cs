@@ -22,10 +22,10 @@ namespace Booking.Application.Features.HotelRooms.Commands
     public class DeleteHotelCommandHandler : IRequestHandler<DeleteHotelCommand, List<DeleteVM>>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public DeleteHotelCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -44,7 +44,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
                     var data = hotelRooms.FirstOrDefault(x => x.Id == id);
                     if (data == null)
                     {
-                        result.Add(new DeleteVM { Id = id, IsSuccess = false, Message = _messageLanguage[MessageCodeConstant.DataNotFound] });
+                        result.Add(new DeleteVM { Id = id, IsSuccess = false, Message = _messageLanguage.GetLabels(MessageCodeConstant.DataNotFound) });
                         continue;
                     }
 

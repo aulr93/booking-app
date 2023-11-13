@@ -28,10 +28,10 @@ namespace Booking.Application.Features.HotelRooms.Commands
     public class CreateHotelCommandHandler : IRequestHandler<CreateHotelCommand, Unit>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public CreateHotelCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -45,7 +45,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
             {
                 var isExist = await _dbContext.HotelRooms.AnyAsync(x => x.RoomNumber == request.RoomNumber);
                 if (isExist)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.DataExist]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.DataExist));
 
                 _dbContext.HotelRooms.Add(new HotelRoom
                 {

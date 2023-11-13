@@ -33,10 +33,10 @@ namespace Booking.Application.Features.Visitors.Commands
     public class CreateVisitorCommandHandler : IRequestHandler<CreateVisitorCommand, Unit>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public CreateVisitorCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -50,7 +50,7 @@ namespace Booking.Application.Features.Visitors.Commands
             {
                 var isExist = await _dbContext.Visitors.AnyAsync(x => x.Username == request.Username || x.Email == request.Email || x.NIK == request.Nik);
                 if (isExist)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.DataExist]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.DataExist));
 
                 var visitorID = Guid.NewGuid();
                 var salt = SaltGenerator.GetSalt();

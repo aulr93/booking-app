@@ -1,7 +1,10 @@
+using Autofac.Core;
 using Booking.Application;
+using Booking.Application.Commons.Extensions;
 using Booking.Common.Interfaces;
 using Booking.Presistence;
 using Booking.WebApi;
+using Booking.WebApi.Commons;
 using Booking.WebApi.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
@@ -25,43 +28,32 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IMachineDateTime, MachineDateTime>();
 builder.Services.AddHttpClient();
-//builder.Services.Configure<WebAppConfig>(builder.Configuration.GetSection(nameof(WebAppConfig)));
-//builder.Services.AddScoped<ApplicationJwtManager>();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddJsonWebTokenService(builder.Configuration);
 
-builder.Services.AddLocalization(opt => opt.ResourcesPath = "Resources");
-builder.Services.Configure<RequestLocalizationOptions>(opt =>
-{
-    var supportedCultures = new List<CultureInfo>
-    {
-        new CultureInfo("en-US"),
-        new CultureInfo("id-ID")
-    };
-
-    opt.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
-    opt.SupportedCultures = supportedCultures;
-    opt.SupportedUICultures = supportedCultures;
-});
+builder.Services.AddLocalization();
 
 builder.Services.AddControllers();
 
-//builder.RegisterType<MessageLanguage>().As<MessageLanguage>();
-//builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
-//       .ConfigureContainer<ContainerBuilder>(autofacBuilder =>
-//        {
-//            autofacBuilder.RegisterType<MessageLanguage>().As<MessageLanguage>();
-//        });
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.OperationFilter<AcceptLanguageHeaderParameter>();
+});
 
 var app = builder.Build();
 
 string pathBase = Environment.GetEnvironmentVariable("ASPNETCORE_PATH_BASE") ?? string.Empty;
+
+var supportedCultures = new[] { "en-US", "id-ID" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+                                                          .AddSupportedCultures(supportedCultures)
+                                                          .AddSupportedUICultures(supportedCultures);
+localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
+app.UseRequestLocalization(localizationOptions);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -90,9 +82,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-var localizeOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
-app.UseRequestLocalization(localizeOptions.Value);
 
 app.UseAuthorization();
 

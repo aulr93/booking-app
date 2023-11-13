@@ -22,10 +22,10 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
     public class GetDetailHotelRoomBookingQueryHandler : IRequestHandler<GetDetailHotelRoomBookingQuery, HotelRoomBookingVM>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public GetDetailHotelRoomBookingQueryHandler(IApplicationDbContext dbContext,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -57,7 +57,7 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
                                                                }).FirstOrDefaultAsync();
 
                 if (result == null)
-                    throw new NotFoundException(_messageLanguage[MessageCodeConstant.DataNotFound]);
+                    throw new NotFoundException(_messageLanguage.GetLabels(MessageCodeConstant.DataNotFound));
 
                 return result;
             }

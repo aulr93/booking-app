@@ -25,11 +25,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMachineDateTime _dateTime;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public CheckInOutCommandHandler(IApplicationDbContext dbContext,
             IMachineDateTime dateTime,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _dateTime = dateTime;
@@ -44,12 +44,12 @@ namespace Booking.Application.Features.HotelRooms.Commands
             {
                 var booking = await _dbContext.HotelRoomBookings.FirstOrDefaultAsync(x => x.Id == request.Id);
                 if (booking is null)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.BookingRoomNotFound]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.BookingRoomNotFound));
 
                 if (request.CheckInOut == EnumCheckInOut.CheckOut)
                 {
                     if (booking.ActualCheckInDate is null)
-                        throw new BadRequestException(_messageLanguage[MessageCodeConstant.VisitorNotCheckIn]);
+                        throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.VisitorNotCheckIn));
 
                     booking.ActualCheckOutDate = _dateTime.UtcNow;
                 }

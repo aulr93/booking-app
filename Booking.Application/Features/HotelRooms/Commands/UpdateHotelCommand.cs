@@ -28,10 +28,10 @@ namespace Booking.Application.Features.HotelRooms.Commands
     public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCommand, Unit>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public UpdateHotelCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -45,11 +45,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
             {
                 var isExist = await _dbContext.HotelRooms.AnyAsync(x => x.Id != request.Id && x.RoomNumber == request.RoomNumber);
                 if (isExist)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.RoomNoIsExist]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.RoomNoIsExist));
 
                 var hotelRoom = await _dbContext.HotelRooms.FirstOrDefaultAsync(x => x.Id == request.Id);
                 if (hotelRoom == null)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.DataNotFound]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.DataNotFound));
 
                 hotelRoom.RoomNumber = request.RoomNumber;
                 hotelRoom.Type = request.Type;

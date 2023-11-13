@@ -27,11 +27,11 @@ namespace Booking.Application.Features.Administrators.Commands
     public class AdminLoginCommandHandler : IRequestHandler<AdminLoginCommand, LoginVM>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
         private readonly IAuthenticationProvider _authenticationProvider;
 
         public AdminLoginCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguageService messageLanguage,
+            IMessageLanguageService messageLanguage,
             IAuthenticationProvider authenticationProvider)
         {
             _dbContext = dbContext;
@@ -45,10 +45,10 @@ namespace Booking.Application.Features.Administrators.Commands
             {
                 var admin = await _dbContext.Administrators.Where(x => x.Username == request.Username).SingleOrDefaultAsync();
                 if (admin is null)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.UsernameNotFound]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.UsernameNotFound));
 
                 if (admin.HashedPassword != (request.Password + Encoding.Default.GetString(admin.Salt)).ToSHA512())
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.WrongPassword]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.WrongPassword));
 
                 return new LoginVM
                 {

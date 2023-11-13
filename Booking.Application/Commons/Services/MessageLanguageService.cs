@@ -9,18 +9,18 @@ namespace Booking.Application.Commons.Services
     public class MessageLanguageService : IMessageLanguageService
     {
         private readonly IStringLocalizer<MessageResource> _localizer;
-        private readonly IMemoryCache _memoryCache;
-        private readonly MemoryCacheEntryOptions _memoryCacheEntry;
+        //private readonly IMemoryCache _memoryCache;
+        //private readonly MemoryCacheEntryOptions _memoryCacheEntry;
 
         public MessageLanguageService(IStringLocalizer<MessageResource> localizer,
-            IConfiguration configuration,
-            IMemoryCache memoryCache)
+            IConfiguration configuration)
+            //IMemoryCache memoryCache)
         {
             _localizer = localizer;
-            _memoryCache = memoryCache;
-            _memoryCacheEntry = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(double.Parse(configuration["MemoryCacheEntryOptions:SlidingExpiration"] ?? "60")))
-                                                             .SetAbsoluteExpiration(TimeSpan.FromSeconds(double.Parse(configuration["MemoryCacheEntryOptions:AbsoluteExpiration"] ?? "3600")))
-                                                             .SetPriority(CacheItemPriority.Normal);
+            //_memoryCache = memoryCache;
+            //_memoryCacheEntry = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(double.Parse(configuration["MemoryCacheEntryOptions:SlidingExpiration"] ?? "60")))
+            //                                                 .SetAbsoluteExpiration(TimeSpan.FromSeconds(double.Parse(configuration["MemoryCacheEntryOptions:AbsoluteExpiration"] ?? "3600")))
+            //                                                 .SetPriority(CacheItemPriority.Normal);
         }
 
         //public string this[string key]
@@ -32,12 +32,13 @@ namespace Booking.Application.Commons.Services
         {
             try
             {
-                _memoryCache.TryGetValue($"msg|{key}", out string? cacheValue);
-                if (!string.IsNullOrEmpty(cacheValue))
-                    return cacheValue;
+                //_memoryCache.TryGetValue($"msg|{key}", out string? cacheValue);
+                //if (!string.IsNullOrEmpty(cacheValue))
+                //    return cacheValue;
 
-                _memoryCache.Set($"msg|{key}", _localizer[key], _memoryCacheEntry);
-
+                //_memoryCache.Set($"msg|{key}", _localizer[key], _memoryCacheEntry);
+                var abc1 = _localizer["WrongPassword"];
+                var abc2 = _localizer[key];
                 return _localizer[key];
             }
             catch (Exception ex)

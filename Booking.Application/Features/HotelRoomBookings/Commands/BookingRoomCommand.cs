@@ -28,11 +28,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMachineDateTime _dateTime;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public BookingRoomCommandHandler(IApplicationDbContext dbContext,
             IMachineDateTime dateTime,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _dateTime = dateTime;
@@ -49,10 +49,10 @@ namespace Booking.Application.Features.HotelRooms.Commands
                                                            .FirstOrDefaultAsync(x => x.Id == request.RoomId && 
                                                                                      x.HotelRoomBookings.Any(y => y.BookingDate == _dateTime.UtcNow));
                 if (hotelRoom is null)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.RoomNoNotExist]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.RoomNoNotExist));
 
                 if (hotelRoom.HotelRoomBookings is not null && hotelRoom.HotelRoomBookings.Any())
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.RoomHasBeenBooked]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.RoomHasBeenBooked));
 
                 _dbContext.HotelRoomBookings.Add(new HotelRoomBooking
                 {

@@ -27,10 +27,10 @@ namespace Booking.Application.Features.Administrators.Commands
     public class CreateAdminCommandHandler : IRequestHandler<CreateAdminCommand, Unit>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguageService _messageLanguage;
+        private readonly IMessageLanguageService _messageLanguage;
 
         public CreateAdminCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -44,11 +44,11 @@ namespace Booking.Application.Features.Administrators.Commands
             {
                 var isExist = await _dbContext.Administrators.AnyAsync(x => x.Username == request.Username);
                 if (isExist)
-                    throw new BadRequestException(_messageLanguage[MessageCodeConstant.DataExist]);
+                    throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.DataExist));
 
                 var adminID = Guid.NewGuid();
                 var salt = SaltGenerator.GetSalt();
-                var password = AuthorizationHelper.GetRandomPassword();
+                var password = request.Password;
 
                 _dbContext.Administrators.Add(new Administrator
                 {
