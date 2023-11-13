@@ -1,8 +1,8 @@
 ﻿using Booking.Application.Common.Exceptions;
 using Booking.Application.Commons.Constants;
-using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
 using Booking.Application.Commons.Resources;
+using Booking.Application.Commons.Services;
 using Booking.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,10 +28,10 @@ namespace Booking.Application.Features.HotelRooms.Commands
     public class CreateHotelCommandHandler : IRequestHandler<CreateHotelCommand, Unit>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguage _messageLanguage;
+        private readonly MessageLanguageService _messageLanguage;
 
         public CreateHotelCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguage messageLanguage)
+            MessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -43,11 +43,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
 
             try
             {
-                var isExist = await _dbContext.hotelRooms.AnyAsync(x => x.RoomNumber == request.RoomNumber);
+                var isExist = await _dbContext.HotelRooms.AnyAsync(x => x.RoomNumber == request.RoomNumber);
                 if (isExist)
                     throw new BadRequestException(_messageLanguage[MessageCodeConstant.DataExist]);
 
-                _dbContext.hotelRooms.Add(new HotelRoom
+                _dbContext.HotelRooms.Add(new HotelRoom
                 {
                     Id = Guid.NewGuid(),
                     RoomNumber = request.RoomNumber,

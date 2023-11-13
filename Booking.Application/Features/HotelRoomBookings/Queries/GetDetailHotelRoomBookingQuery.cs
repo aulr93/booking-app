@@ -1,7 +1,7 @@
 ﻿using Booking.Application.Common.Exceptions;
 using Booking.Application.Commons.Constants;
-using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
+using Booking.Application.Commons.Services;
 using Booking.Application.Features.HotelRoomBookings.Models;
 using Booking.Application.Features.HotelRooms.Models;
 using MediatR;
@@ -22,10 +22,10 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
     public class GetDetailHotelRoomBookingQueryHandler : IRequestHandler<GetDetailHotelRoomBookingQuery, HotelRoomBookingVM>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguage _messageLanguage;
+        private readonly MessageLanguageService _messageLanguage;
 
         public GetDetailHotelRoomBookingQueryHandler(IApplicationDbContext dbContext,
-            MessageLanguage messageLanguage)
+            MessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -35,13 +35,13 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
         {
             try
             {
-                var result = await _dbContext.hotelRoomBookings.Include(x => x.HotelRoom)
+                var result = await _dbContext.HotelRoomBookings.Include(x => x.HotelRoom)
                                                                .Where(x => x.Id == request.Id)
                                                                .Select(x => new HotelRoomBookingVM
                                                                {
                                                                    Id = x.Id,
-                                                                   VisitorName = x.VisitorName,
-                                                                   NIK = x.NIK,
+                                                                   VisitorName = string.Empty,
+                                                                   NIK = string.Empty,
                                                                    Date = x.Date,
                                                                    BookingDate = x.BookingDate,
                                                                    ActualCheckInDate = x.ActualCheckInDate,

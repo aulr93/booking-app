@@ -37,7 +37,7 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
         {
             try
             {
-                var query = _dbContext.hotelRooms.Include(x => x.HotelRoomBookings)
+                var query = _dbContext.HotelRooms.Include(x => x.HotelRoomBookings)
                                                  .Where(x => request.GetData == GetHotelRoomAvailabilityQuery.EnumGetData.AvailableOnly ?
                                                              !x.HotelRoomBookings.Any(y => y.BookingDate == request.Date) :
                                                              false);

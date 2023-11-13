@@ -1,7 +1,7 @@
 ﻿using Booking.Application.Common.Exceptions;
 using Booking.Application.Commons.Constants;
-using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
+using Booking.Application.Commons.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,10 +28,10 @@ namespace Booking.Application.Features.HotelRooms.Commands
     public class UpdateHotelCommandHandler : IRequestHandler<UpdateHotelCommand, Unit>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguage _messageLanguage;
+        private readonly MessageLanguageService _messageLanguage;
 
         public UpdateHotelCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguage messageLanguage)
+            MessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -43,11 +43,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
           
             try
             {
-                var isExist = await _dbContext.hotelRooms.AnyAsync(x => x.Id != request.Id && x.RoomNumber == request.RoomNumber);
+                var isExist = await _dbContext.HotelRooms.AnyAsync(x => x.Id != request.Id && x.RoomNumber == request.RoomNumber);
                 if (isExist)
                     throw new BadRequestException(_messageLanguage[MessageCodeConstant.RoomNoIsExist]);
 
-                var hotelRoom = await _dbContext.hotelRooms.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var hotelRoom = await _dbContext.HotelRooms.FirstOrDefaultAsync(x => x.Id == request.Id);
                 if (hotelRoom == null)
                     throw new BadRequestException(_messageLanguage[MessageCodeConstant.DataNotFound]);
 
@@ -56,7 +56,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
                 hotelRoom.Floor = request.Floor;
                 hotelRoom.Price = request.Price;
 
-                _dbContext.hotelRooms.Update(hotelRoom);
+                _dbContext.HotelRooms.Update(hotelRoom);
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);

@@ -1,7 +1,7 @@
 ﻿using Booking.Application.Common.Exceptions;
 using Booking.Application.Commons.Constants;
-using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
+using Booking.Application.Commons.Services;
 using Booking.Application.Features.HotelRoomBookings.Models;
 using Booking.Common.Interfaces;
 using MediatR;
@@ -25,11 +25,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMachineDateTime _dateTime;
-        private readonly MessageLanguage _messageLanguage;
+        private readonly MessageLanguageService _messageLanguage;
 
         public CheckInOutCommandHandler(IApplicationDbContext dbContext,
             IMachineDateTime dateTime,
-            MessageLanguage messageLanguage)
+            MessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _dateTime = dateTime;
@@ -42,7 +42,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
 
             try
             {
-                var booking = await _dbContext.hotelRoomBookings.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var booking = await _dbContext.HotelRoomBookings.FirstOrDefaultAsync(x => x.Id == request.Id);
                 if (booking is null)
                     throw new BadRequestException(_messageLanguage[MessageCodeConstant.BookingRoomNotFound]);
 
@@ -56,7 +56,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
                 else
                     booking.ActualCheckInDate = _dateTime.UtcNow;
 
-                _dbContext.hotelRoomBookings.Update(booking);
+                _dbContext.HotelRoomBookings.Update(booking);
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);

@@ -135,7 +135,13 @@
   <data name="RoomNoNotExist" xml:space="preserve">
     <value>Room data not found.</value>
   </data>
+  <data name="UsernameNotFound" xml:space="preserve">
+    <value>Username not found.</value>
+  </data>
   <data name="VisitorNotCheckIn" xml:space="preserve">
     <value>Can't check out because the visitor has not checked in.</value>
+  </data>
+  <data name="WrongPassword" xml:space="preserve">
+    <value>You entered a wrong password.</value>
   </data>
 </root>

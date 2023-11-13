@@ -9,5 +9,7 @@
         public const string RoomHasBeenBooked = "RoomHasBeenBooked";
         public const string BookingRoomNotFound = "BookingRoomNotFound";
         public const string VisitorNotCheckIn = "VisitorNotCheckIn";
+        public const string UsernameNotFound = "UsernameNotFound";
+        public const string WrongPassword = "WrongPassword";
     }
 }

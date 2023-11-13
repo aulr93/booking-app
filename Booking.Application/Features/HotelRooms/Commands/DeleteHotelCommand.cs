@@ -1,7 +1,7 @@
 ﻿using Booking.Application.Commons.Constants;
-using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
 using Booking.Application.Commons.Models;
+using Booking.Application.Commons.Services;
 using Booking.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,10 +22,10 @@ namespace Booking.Application.Features.HotelRooms.Commands
     public class DeleteHotelCommandHandler : IRequestHandler<DeleteHotelCommand, List<DeleteVM>>
     {
         private readonly IApplicationDbContext _dbContext;
-        private readonly MessageLanguage _messageLanguage;
+        private readonly MessageLanguageService _messageLanguage;
 
         public DeleteHotelCommandHandler(IApplicationDbContext dbContext,
-            MessageLanguage messageLanguage)
+            MessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
@@ -34,7 +34,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
         public async Task<List<DeleteVM>> Handle(DeleteHotelCommand request, CancellationToken cancellationToken)
         {
             var result = new List<DeleteVM>();
-            var hotelRooms = await _dbContext.hotelRooms.Where(x => request.Ids.Any(id => id == x.Id)).ToListAsync();
+            var hotelRooms = await _dbContext.HotelRooms.Where(x => request.Ids.Any(id => id == x.Id)).ToListAsync();
 
             foreach (var id in request.Ids)
             {
@@ -48,7 +48,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
                         continue;
                     }
 
-                    _dbContext.hotelRooms.Remove(data);
+                    _dbContext.HotelRooms.Remove(data);
 
                     await _dbContext.SaveChangesAsync(cancellationToken);
                     await transaction.CommitAsync(cancellationToken);

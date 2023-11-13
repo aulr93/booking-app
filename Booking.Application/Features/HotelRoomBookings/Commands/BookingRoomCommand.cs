@@ -1,7 +1,7 @@
 ﻿using Booking.Application.Common.Exceptions;
 using Booking.Application.Commons.Constants;
-using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
+using Booking.Application.Commons.Services;
 using Booking.Common.Interfaces;
 using Booking.Domain.Entities;
 using Booking.Domain.Entities.Transactions;
@@ -12,18 +12,14 @@ namespace Booking.Application.Features.HotelRooms.Commands
 {
     public class BookingRoomCommand : IRequest<Unit>
     {
-        public BookingRoomCommand(Guid roomId, string visitorName, string nik, DateTime bookingDate, DateTime? checkInDate)
+        public BookingRoomCommand(Guid roomId, DateTime bookingDate, DateTime? checkInDate)
         {
             RoomId = roomId;
-            VisitorName = visitorName;
-            NIK = nik;
             BookingDate = bookingDate;
             CheckInDate = checkInDate;
         }
 
         public Guid RoomId { get; set; }
-        public string VisitorName { get; set; }
-        public string NIK { get; set; }
         public DateTime BookingDate { get; set; }
         public DateTime? CheckInDate { get; set; }
     }
@@ -32,11 +28,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMachineDateTime _dateTime;
-        private readonly MessageLanguage _messageLanguage;
+        private readonly MessageLanguageService _messageLanguage;
 
         public BookingRoomCommandHandler(IApplicationDbContext dbContext,
             IMachineDateTime dateTime,
-            MessageLanguage messageLanguage)
+            MessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _dateTime = dateTime;
@@ -49,7 +45,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
 
             try
             {
-                var hotelRoom = await _dbContext.hotelRooms.Include(x => x.HotelRoomBookings)
+                var hotelRoom = await _dbContext.HotelRooms.Include(x => x.HotelRoomBookings)
                                                            .FirstOrDefaultAsync(x => x.Id == request.RoomId && 
                                                                                      x.HotelRoomBookings.Any(y => y.BookingDate == _dateTime.UtcNow));
                 if (hotelRoom is null)
@@ -58,12 +54,11 @@ namespace Booking.Application.Features.HotelRooms.Commands
                 if (hotelRoom.HotelRoomBookings is not null && hotelRoom.HotelRoomBookings.Any())
                     throw new BadRequestException(_messageLanguage[MessageCodeConstant.RoomHasBeenBooked]);
 
-                _dbContext.hotelRoomBookings.Add(new HotelRoomBooking
+                _dbContext.HotelRoomBookings.Add(new HotelRoomBooking
                 {
                     Id = Guid.NewGuid(),
                     RoomId = request.RoomId,
-                    VisitorName = request.VisitorName,
-                    NIK = request.NIK,
+                    VisitorId = Guid.Empty,
                     Date = _dateTime.UtcNow,
                     BookingDate = request.BookingDate,
                     ActualCheckInDate = request.CheckInDate.HasValue ? request.CheckInDate : null,

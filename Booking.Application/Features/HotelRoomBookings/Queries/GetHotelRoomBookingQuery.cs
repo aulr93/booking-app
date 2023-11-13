@@ -32,7 +32,7 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
         {
             try
             {
-                var query = _dbContext.hotelRoomBookings.Include(x => x.HotelRoom)
+                var query = _dbContext.HotelRoomBookings.Include(x => x.HotelRoom)
                                                         .Where(x => x.BookingDate == request.Date);
 
                 var data = await query.OrderByDescending(x => x.BookingDate)
@@ -41,8 +41,8 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
                                       .Select(x => new HotelRoomBookingVM
                                       {
                                           Id = x.Id,
-                                          VisitorName = x.VisitorName,
-                                          NIK = x.NIK,
+                                          VisitorName = string.Empty,
+                                          NIK = string.Empty,
                                           Date = x.Date,
                                           BookingDate = x.BookingDate,
                                           ActualCheckInDate = x.ActualCheckInDate,

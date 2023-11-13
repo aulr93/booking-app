@@ -1,19 +1,18 @@
-﻿using Booking.Application.Commons.Resources;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Booking.Application.Commons.Interfaces;
+using Booking.Application.Commons.Resources;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using System.Xml.Linq;
 
-namespace Booking.Application.Commons.Helpers
+namespace Booking.Application.Commons.Services
 {
-    public class MessageLanguage
+    public class MessageLanguageService : IMessageLanguageService
     {
         private readonly IStringLocalizer<MessageResource> _localizer;
         private readonly IMemoryCache _memoryCache;
         private readonly MemoryCacheEntryOptions _memoryCacheEntry;
 
-        public MessageLanguage(IStringLocalizer<MessageResource> localizer,
+        public MessageLanguageService(IStringLocalizer<MessageResource> localizer,
             IConfiguration configuration,
             IMemoryCache memoryCache)
         {
@@ -24,10 +23,10 @@ namespace Booking.Application.Commons.Helpers
                                                              .SetPriority(CacheItemPriority.Normal);
         }
 
-        public string this[string key]
-        {
-            get { return GetLabels(key); }
-        }
+        //public string this[string key]
+        //{
+        //    get { return GetLabels(key); }
+        //}
 
         public string GetLabels(string key)
         {

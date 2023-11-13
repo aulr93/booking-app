@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.WebApi.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
     public class HotelRoomBookingController : BaseController
     {
         [ResponseType(type: typeof(PaginationResult<HotelRoomAvailabilityVM>), statusCode: StatusCodes.Status200OK)]

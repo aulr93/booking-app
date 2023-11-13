@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.WebApi.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
     public class ReportController : BaseController
     {
 

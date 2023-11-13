@@ -1,6 +1,8 @@
 ﻿using Booking.Application.Commons.Interfaces;
 using Booking.Common.Interfaces;
+using Booking.Domain.Configurations;
 using Booking.Domain.Entities;
+using Booking.Domain.Entities.Masters;
 using Booking.Domain.Entities.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -28,9 +30,13 @@ namespace Booking.Presistence
             _dateTime = dateTime;
         }
 
-        public DbSet<HotelRoom> hotelRooms { get; set; }
+        public DbSet<HotelRoom> HotelRooms { get; set; }
 
-        public DbSet<HotelRoomBooking> hotelRoomBookings { get; set; }
+        public DbSet<HotelRoomBooking> HotelRoomBookings { get; set; }
+
+        public DbSet<Administrator> Administrators { get; set; }
+
+        public DbSet<Visitor> Visitors { get; set; }
 
         public override DatabaseFacade Database => base.Database;
 
@@ -58,7 +64,12 @@ namespace Booking.Presistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(HotelRoom).Assembly);
+            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(HotelRoom).Assembly);
+            new AdministratorConfiguration().Configure(modelBuilder.Entity<Administrator>());
+            new VisitorConfiguration().Configure(modelBuilder.Entity<Visitor>());
+            new HotelRoomConfiguration().Configure(modelBuilder.Entity<HotelRoom>());
+            new HotelRoomBookingConfiguration().Configure(modelBuilder.Entity<HotelRoomBooking>());
+
         }
     }
 }

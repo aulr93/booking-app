@@ -1,10 +1,9 @@
 using Booking.Application;
 using Booking.Common.Interfaces;
 using Booking.Presistence;
+using Booking.WebApi;
 using Booking.WebApi.Services;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Localization.Routing;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Globalization;
@@ -31,6 +30,7 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddJsonWebTokenService(builder.Configuration);
 
 builder.Services.AddLocalization(opt => opt.ResourcesPath = "Resources");
 builder.Services.Configure<RequestLocalizationOptions>(opt =>
@@ -47,6 +47,14 @@ builder.Services.Configure<RequestLocalizationOptions>(opt =>
 });
 
 builder.Services.AddControllers();
+
+//builder.RegisterType<MessageLanguage>().As<MessageLanguage>();
+//builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+//       .ConfigureContainer<ContainerBuilder>(autofacBuilder =>
+//        {
+//            autofacBuilder.RegisterType<MessageLanguage>().As<MessageLanguage>();
+//        });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

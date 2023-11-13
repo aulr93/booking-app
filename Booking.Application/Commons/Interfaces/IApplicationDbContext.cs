@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Entities;
+using Booking.Domain.Entities.Masters;
 using Booking.Domain.Entities.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -10,9 +11,13 @@ namespace Booking.Application.Commons.Interfaces
     {
         public DatabaseFacade Database { get; }
 
-        public DbSet<HotelRoom> hotelRooms { get; set; }
+        public DbSet<HotelRoom> HotelRooms { get; set; }
 
-        public DbSet<HotelRoomBooking> hotelRoomBookings { get; set; }
+        public DbSet<HotelRoomBooking> HotelRoomBookings { get; set; }
+        
+        public DbSet<Administrator> Administrators { get; set; }
+        
+        public DbSet<Visitor> Visitors { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
