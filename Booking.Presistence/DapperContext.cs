@@ -11,7 +11,7 @@ namespace Booking.Presistence
 
         public DapperContext(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("AuthConnection") ?? string.Empty;
+            _connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
         }
 
         public DbConnection CreateConnection() => new NpgsqlConnection(_connectionString);

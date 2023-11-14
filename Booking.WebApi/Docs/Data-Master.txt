@@ -1,0 +1,144 @@
+/* -------------------------------- Data Admin -------------------------------- */
+{
+  "username": "sa1",
+  "password": "111"
+}
+{
+  "username": "sa2",
+  "password": "222"
+}
+{
+  "username": "sa3",
+  "password": "333"
+}
+/* -------------------------------- Data Admin -------------------------------- */
+
+/* -------------------------------- Data Visitor -------------------------------- */
+{
+  "username": "VS001",
+  "name": "Abud",
+  "nik": "12345",
+  "email": "12345@email.au",
+  "password": "123"
+}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAuY2xhaW0udXNlcmlkIjoiN2ViNzFiOGEtNTdmZC00OGM5LWJlYjYtMDljZTY0OThjOTEzIiwiYXBwLmNsYWltLnVzZXJuYW1lIjoiVlMwMDEiLCJhcHAuY2xhaW0ucm9sZSI6IlZTVCIsIm5iZiI6MTY5OTk4NDEyNCwiZXhwIjoxNzAwNTg4OTI0LCJpYXQiOjE2OTk5ODQxMjR9.lJvg4KzJTPEkW1w_iNx6OMDcHzw3MbxdLQ_oibnqZ5I
+{
+  "username": "VS002",
+  "name": "Budi",
+  "nik": "54321",
+  "email": "54321@email.au",
+  "password": "321"
+}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAuY2xhaW0udXNlcmlkIjoiMjg4NzA4NmEtOWJkMC00ZWI0LTlhNTctZjQ0M2FmYjlhYjNhIiwiYXBwLmNsYWltLnVzZXJuYW1lIjoiVlMwMDIiLCJhcHAuY2xhaW0ucm9sZSI6IlZTVCIsIm5iZiI6MTY5OTk4NDE0OCwiZXhwIjoxNzAwNTg4OTQ4LCJpYXQiOjE2OTk5ODQxNDh9.Y4hyMPyuHzAY5Sb6BfkKB1bhfUhNvCp-WKrgC3z-MSA
+{
+  "username": "VS003",
+  "name": "Iman",
+  "nik": "67890",
+  "email": "67890@email.au",
+  "password": "678"
+}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAuY2xhaW0udXNlcmlkIjoiZDRjMzJlN2QtNzdjNy00ZGVmLTg0M2UtMGU5N2M1Mzk1MzgxIiwiYXBwLmNsYWltLnVzZXJuYW1lIjoiVlMwMDMiLCJhcHAuY2xhaW0ucm9sZSI6IlZTVCIsIm5iZiI6MTY5OTk4NDE2MiwiZXhwIjoxNzAwNTg4OTYyLCJpYXQiOjE2OTk5ODQxNjJ9.5eoXrRijqDitxZq3qhyM3Pt1vm6CbRr6ho8SCX544C8
+{
+  "username": "VS004",
+  "name": "Amin",
+  "nik": "09876",
+  "email": "09876@email.au",
+  "password": "098"
+}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAuY2xhaW0udXNlcmlkIjoiMzg1ZjFhMWQtZGE2ZC00YjZkLWI1NDMtODQxZDU4NTkxNjQ2IiwiYXBwLmNsYWltLnVzZXJuYW1lIjoiVlMwMDQiLCJhcHAuY2xhaW0ucm9sZSI6IlZTVCIsIm5iZiI6MTY5OTk4NDE3NywiZXhwIjoxNzAwNTg4OTc3LCJpYXQiOjE2OTk5ODQxNzd9.QckNkNf4yltvxyV--H5TBmTO9_3FDpAggNjS0DLeQPQ
+/* -------------------------------- Data Visitor -------------------------------- */
+
+/* -------------------------------- Hotel Room -------------------------------- */
+    "Standar Room",
+    "Superior Room",
+    "Deluxe Room",
+    "Twin Room",
+    "Single Room",
+    "Double Room",
+    "Family Room"
+
+{
+  "roomNumber": "G0101",
+  "type": "Standar Room",
+  "floor": 1,
+  "price": 300000
+}
+{
+  "roomNumber": "G0102",
+  "type": "Superior Room",
+  "floor": 1,
+  "price": 400000
+}
+{
+  "roomNumber": "G0103",
+  "type": "Deluxe Room",
+  "floor": 1,
+  "price": 500000
+}
+{
+  "roomNumber": "G0104",
+  "type": "Twin Room",
+  "floor": 1,
+  "price": 350000
+}
+{
+  "roomNumber": "G0105",
+  "type": "Single Room",
+  "floor": 1,
+  "price": 300000
+}
+{
+  "roomNumber": "G0106",
+  "type": "Double Room",
+  "floor": 1,
+  "price": 380000
+}
+{
+  "roomNumber": "G0107",
+  "type": "Family Room",
+  "floor": 1,
+  "price": 600000
+}
+{
+  "roomNumber": "G0201",
+  "type": "Standar Room",
+  "floor": 2,
+  "price": 300000
+}
+{
+  "roomNumber": "G0202",
+  "type": "Superior Room",
+  "floor": 2,
+  "price": 400000
+}
+{
+  "roomNumber": "G0203",
+  "type": "Deluxe Room",
+  "floor": 2,
+  "price": 500000
+}
+{
+  "roomNumber": "G0204",
+  "type": "Twin Room",
+  "floor": 2,
+  "price": 350000
+}
+{
+  "roomNumber": "G0205",
+  "type": "Single Room",
+  "floor": 2,
+  "price": 300000
+}
+{
+  "roomNumber": "G0206",
+  "type": "Double Room",
+  "floor": 2,
+  "price": 380000
+}
+{
+  "roomNumber": "G0207",
+  "type": "Family Room",
+  "floor": 2,
+  "price": 600000
+}		
+/* -------------------------------- Hotel Room -------------------------------- */

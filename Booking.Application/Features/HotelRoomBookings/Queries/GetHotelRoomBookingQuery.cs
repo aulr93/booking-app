@@ -2,6 +2,7 @@
 using Booking.Application.Commons.Models;
 using Booking.Application.Features.HotelRoomBookings.Models;
 using Booking.Application.Features.HotelRooms.Models;
+using Booking.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,23 +10,24 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
 {
     public class GetHotelRoomBookingQuery : BasePagination, IRequest<PaginationResult<HotelRoomBookingVM>>
     {
-        public GetHotelRoomBookingQuery(DateTime date, EnumGetRoomData getRoomData)
+        public GetHotelRoomBookingQuery(DateTime date)
         {
             Date = date;
-            GetRoomData = getRoomData;
         }
 
         public DateTime Date { get; }
-        public EnumGetRoomData GetRoomData { get; }
     }
 
     public class GetHotelRoomBookingQueryHandler : IRequestHandler<GetHotelRoomBookingQuery, PaginationResult<HotelRoomBookingVM>>
     {
         private readonly IApplicationDbContext _dbContext;
+        private readonly ICurrentUserService _currentUserService;
 
-        public GetHotelRoomBookingQueryHandler(IApplicationDbContext dbContext)
+        public GetHotelRoomBookingQueryHandler(IApplicationDbContext dbContext,
+            ICurrentUserService currentUserService)
         {
             _dbContext = dbContext;
+            _currentUserService = currentUserService;
         }
 
         public async Task<PaginationResult<HotelRoomBookingVM>> Handle(GetHotelRoomBookingQuery request, CancellationToken cancellationToken)
@@ -33,7 +35,8 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
             try
             {
                 var query = _dbContext.HotelRoomBookings.Include(x => x.HotelRoom)
-                                                        .Where(x => x.BookingDate == request.Date);
+                                                        .Where(x => x.BookingDate.Date == request.Date.Date &&
+                                                                    x.VisitorId.ToString() == _currentUserService.UserId);
 
                 var data = await query.OrderByDescending(x => x.BookingDate)
                                       .Skip(request.ConvertPageToOffset())

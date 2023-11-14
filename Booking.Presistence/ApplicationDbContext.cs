@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Commons.Interfaces;
 using Booking.Common.Interfaces;
+using Booking.Domain;
 using Booking.Domain.Configurations;
 using Booking.Domain.Entities;
 using Booking.Domain.Entities.Masters;
@@ -52,10 +53,27 @@ namespace Booking.Presistence
                 entry.State = EntityState.Detached;
         }
 
-        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        //{
-        //    return base.SaveChangesAsync(cancellationToken);
-        //}
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            string userId = !string.IsNullOrEmpty(_currentUserService.UserId) ? _currentUserService.UserId.ToString() : DomainConstant.DEFAULT_PERFORMER;
+
+            foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.UserIn = !string.IsNullOrEmpty(entry.Entity.UserIn) ? entry.Entity.UserIn : userId;
+                        entry.Entity.DateIn = _dateTime.UtcNow;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.UserUp = userId;
+                        entry.Entity.DateUp = _dateTime.UtcNow;
+                        break;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
         public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
@@ -64,7 +82,6 @@ namespace Booking.Presistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfigurationsFromAssembly(typeof(HotelRoom).Assembly);
             new AdministratorConfiguration().Configure(modelBuilder.Entity<Administrator>());
             new VisitorConfiguration().Configure(modelBuilder.Entity<Visitor>());
             new HotelRoomConfiguration().Configure(modelBuilder.Entity<HotelRoom>());

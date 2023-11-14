@@ -8,7 +8,7 @@ namespace Booking.Application.Features.HotelRooms.Queries
 {
     public class GetHotelRoomQuery : BasePagination, IRequest<PaginationResult<HotelRoomVM>>
     {
-        public GetHotelRoomQuery(string roomNumber, string type, int floor, int? minPrice, int? maxPrice)
+        public GetHotelRoomQuery(string roomNumber, string type, int? floor, int? minPrice, int? maxPrice)
         {
             RoomNumber = roomNumber;
             Type = type;
@@ -19,7 +19,7 @@ namespace Booking.Application.Features.HotelRooms.Queries
 
         public string RoomNumber { get; }
         public string Type { get; }
-        public int Floor { get; }
+        public int? Floor { get; }
         public int? MinPrice { get; }
         public int? MaxPrice { get; }
     }
@@ -37,11 +37,11 @@ namespace Booking.Application.Features.HotelRooms.Queries
         {
             try
             {
-                var query = _dbContext.HotelRooms.Where(x => !string.IsNullOrEmpty(request.RoomNumber) ? x.RoomNumber.Contains(request.RoomNumber) : false &&
-                                                             !string.IsNullOrEmpty(request.Type) ? x.Type.Contains(request.Type) : false &&
-                                                             request.Floor > 0 ? x.Floor == request.Floor : false &&
-                                                             request.MinPrice != null ? x.Price >= request.MinPrice : false &&
-                                                             request.MaxPrice != null ? x.Price <= request.MaxPrice : false);
+                var query = _dbContext.HotelRooms.Where(x => !string.IsNullOrEmpty(request.RoomNumber) ? x.RoomNumber.Contains(request.RoomNumber) : true &&
+                                                             !string.IsNullOrEmpty(request.Type) ? x.Type.Contains(request.Type) : true &&
+                                                             request.Floor != null ? x.Floor == request.Floor : true &&
+                                                             request.MinPrice != null ? x.Price >= request.MinPrice : true &&
+                                                             request.MaxPrice != null ? x.Price <= request.MaxPrice : true);
 
                 var data = await query.OrderByDescending(x => x.RoomNumber)
                                       .Skip(request.ConvertPageToOffset())

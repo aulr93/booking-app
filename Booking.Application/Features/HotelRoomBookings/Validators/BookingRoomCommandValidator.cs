@@ -9,7 +9,6 @@ namespace Booking.Application.Features.HotelRoomBookings.Valildators
         {
             RuleFor(x => x.RoomId).NotNull().NotEmpty();
             RuleFor(x => x.BookingDate).NotNull().NotEmpty();
-            RuleFor(x => x.CheckInDate).NotNull().NotEmpty();
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Booking.WebApi.Controllers.v1
         [HttpGet(template: "detail")]
         public async Task<IActionResult> GetDetail([FromQuery] GetDetailHotelRoomRequest request)
         {
-            var query = Mapper.Map<GetHotelRoomQuery>(request);
+            var query = Mapper.Map<GetDetailHotelRoomQuery>(request);
             
             return Wrapper(val: await Mediator.Send(query));
         }
@@ -54,7 +54,7 @@ namespace Booking.WebApi.Controllers.v1
         [HttpPut(template: "update")]
         public async Task<IActionResult> Update([FromBody] UpdateHotelRequest request)
         {
-            var command = Mapper.Map<GetHotelRoomQuery>(request);
+            var command = Mapper.Map<UpdateHotelCommand>(request);
            
             return Wrapper(val: await Mediator.Send(command));
         }
@@ -63,7 +63,7 @@ namespace Booking.WebApi.Controllers.v1
         [HttpDelete(template: "delete")]
         public async Task<IActionResult> Delete([FromQuery] DeleteHotelRequest request)
         {
-            var command = Mapper.Map<GetHotelRoomQuery>(request);
+            var command = Mapper.Map<DeleteHotelCommand>(request);
           
             return Wrapper(val: await Mediator.Send(command));
         }

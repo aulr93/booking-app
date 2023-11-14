@@ -12,16 +12,14 @@ namespace Booking.Application.Features.HotelRooms.Commands
 {
     public class BookingRoomCommand : IRequest<Unit>
     {
-        public BookingRoomCommand(Guid roomId, DateTime bookingDate, DateTime? checkInDate)
+        public BookingRoomCommand(Guid roomId, DateTime bookingDate)
         {
             RoomId = roomId;
             BookingDate = bookingDate;
-            CheckInDate = checkInDate;
         }
 
         public Guid RoomId { get; set; }
         public DateTime BookingDate { get; set; }
-        public DateTime? CheckInDate { get; set; }
     }
 
     public class BookingRoomCommandHandler : IRequestHandler<BookingRoomCommand, Unit>
@@ -29,14 +27,17 @@ namespace Booking.Application.Features.HotelRooms.Commands
         private readonly IApplicationDbContext _dbContext;
         private readonly IMachineDateTime _dateTime;
         private readonly IMessageLanguageService _messageLanguage;
+        private readonly ICurrentUserService _currentUserService;
 
         public BookingRoomCommandHandler(IApplicationDbContext dbContext,
             IMachineDateTime dateTime,
-            IMessageLanguageService messageLanguage)
+            IMessageLanguageService messageLanguage,
+            ICurrentUserService currentUserService)
         {
             _dbContext = dbContext;
             _dateTime = dateTime;
             _messageLanguage = messageLanguage;
+            _currentUserService = currentUserService;
         }
 
         public async Task<Unit> Handle(BookingRoomCommand request, CancellationToken cancellationToken)
@@ -47,7 +48,7 @@ namespace Booking.Application.Features.HotelRooms.Commands
             {
                 var hotelRoom = await _dbContext.HotelRooms.Include(x => x.HotelRoomBookings)
                                                            .FirstOrDefaultAsync(x => x.Id == request.RoomId && 
-                                                                                     x.HotelRoomBookings.Any(y => y.BookingDate == _dateTime.UtcNow));
+                                                                                     !x.HotelRoomBookings.Any(y => y.BookingDate == _dateTime.UtcNow));
                 if (hotelRoom is null)
                     throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.RoomNoNotExist));
 
@@ -58,10 +59,9 @@ namespace Booking.Application.Features.HotelRooms.Commands
                 {
                     Id = Guid.NewGuid(),
                     RoomId = request.RoomId,
-                    VisitorId = Guid.Empty,
+                    VisitorId = Guid.Parse(_currentUserService.UserId),
                     Date = _dateTime.UtcNow,
                     BookingDate = request.BookingDate,
-                    ActualCheckInDate = request.CheckInDate.HasValue ? request.CheckInDate : null,
                 });
 
                 await _dbContext.SaveChangesAsync(cancellationToken);

@@ -1,8 +1,6 @@
 ﻿using Booking.Application.Commons.Constants;
 using Booking.Application.Commons.Interfaces;
 using Booking.Application.Commons.Models;
-using Booking.Application.Commons.Services;
-using Booking.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;

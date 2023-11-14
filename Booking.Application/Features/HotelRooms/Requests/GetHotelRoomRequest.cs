@@ -8,7 +8,7 @@ namespace Booking.Application.Features.HotelRooms.Requests
     {
         public string RoomNumber { get; set; }
         public string Type { get; set; }
-        public int Floor { get; set; }
+        public int? Floor { get; set; }
         public int? MinPrice { get; set; }
         public int? MaxPrice { get; set; }
 

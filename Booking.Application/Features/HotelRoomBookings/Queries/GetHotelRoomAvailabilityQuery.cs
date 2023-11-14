@@ -8,20 +8,12 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
 {
     public class GetHotelRoomAvailabilityQuery : BasePagination, IRequest<PaginationResult<HotelRoomAvailabilityVM>>
     {
-        public GetHotelRoomAvailabilityQuery(DateTime date, EnumGetData getData)
+        public GetHotelRoomAvailabilityQuery(DateTime date)
         {
             Date = date;
-            GetData = getData;
         }
 
         public DateTime Date { get; }
-        public EnumGetData GetData { get; }
-
-        public enum EnumGetData
-        {
-            AllData = 1,
-            AvailableOnly
-        }
     }
 
     public class GetHotelRoomAvailabilityQueryHandler : IRequestHandler<GetHotelRoomAvailabilityQuery, PaginationResult<HotelRoomAvailabilityVM>>
@@ -38,9 +30,7 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
             try
             {
                 var query = _dbContext.HotelRooms.Include(x => x.HotelRoomBookings)
-                                                 .Where(x => request.GetData == GetHotelRoomAvailabilityQuery.EnumGetData.AvailableOnly ?
-                                                             !x.HotelRoomBookings.Any(y => y.BookingDate == request.Date) :
-                                                             false);
+                                                 .Where(x => !x.HotelRoomBookings.Any(y => y.BookingDate.Date == request.Date.Date));
 
                 var data = await query.OrderByDescending(x => x.RoomNumber)
                                       .Skip(request.ConvertPageToOffset())
@@ -52,7 +42,6 @@ namespace Booking.Application.Features.HotelRoomBookings.Queries
                                           Type = x.Type,
                                           Floor = x.Floor,
                                           Price = x.Price,
-                                          IsAvailable = !x.HotelRoomBookings.Any() ? true : false
                                       })
                                       .ToListAsync();
 

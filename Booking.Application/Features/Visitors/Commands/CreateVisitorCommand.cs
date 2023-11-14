@@ -2,7 +2,6 @@
 using Booking.Application.Commons.Constants;
 using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
-using Booking.Application.Commons.Services;
 using Booking.Common;
 using Booking.Common.Extensions;
 using Booking.Domain.Entities.Masters;
@@ -54,7 +53,7 @@ namespace Booking.Application.Features.Visitors.Commands
 
                 var visitorID = Guid.NewGuid();
                 var salt = SaltGenerator.GetSalt();
-                var password = AuthorizationHelper.GetRandomPassword();
+                var password = request.Password;
 
                 _dbContext.Visitors.Add(new Visitor
                 {
@@ -64,7 +63,8 @@ namespace Booking.Application.Features.Visitors.Commands
                     HashedPassword = (password + salt).ToSHA512(),
                     Name = request.Name,
                     NIK = request.Nik,
-                    Email = request.Email
+                    Email = request.Email,
+                    UserIn = visitorID.ToString()
                 });
 
                 await _dbContext.SaveChangesAsync(cancellationToken);

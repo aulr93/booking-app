@@ -1,15 +1,12 @@
-using Booking.Application.Commons.Constants;
 using Booking.Application.Features.Visitors.Commands;
 using Booking.Application.Features.Visitors.Requests;
-using Booking.WebApi.Common;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.WebApi.Controllers.v1
 {
-    [Authorize]
-    [RolePermission(Role.VST)]
+    [AllowAnonymous]
     public class VisitorController : BaseController
     {
         [ResponseType(type: typeof(Unit), statusCode: StatusCodes.Status200OK)]

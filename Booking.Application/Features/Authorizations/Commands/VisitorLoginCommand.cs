@@ -10,9 +10,9 @@ using System.Text;
 
 namespace Booking.Application.Features.Authorizations.Commands
 {
-    public class AdminLoginCommand : IRequest<LoginVM>
+    public class VisitorLoginCommand : IRequest<LoginVM>
     {
-        public AdminLoginCommand(string username, string password)
+        public VisitorLoginCommand(string username, string password)
         {
             Username = username;
             Password = password;
@@ -22,23 +22,23 @@ namespace Booking.Application.Features.Authorizations.Commands
         public string Password { get; }
     }
 
-    public class AdminLoginCommandHandler : IRequestHandler<AdminLoginCommand, LoginVM>
+    public class VisitorLoginCommandHandler : IRequestHandler<VisitorLoginCommand, LoginVM>
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMessageLanguageService _messageLanguage;
 
-        public AdminLoginCommandHandler(IApplicationDbContext dbContext,
+        public VisitorLoginCommandHandler(IApplicationDbContext dbContext,
             IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
         }
 
-        public async Task<LoginVM> Handle(AdminLoginCommand request, CancellationToken cancellationToken)
+        public async Task<LoginVM> Handle(VisitorLoginCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var admin = await _dbContext.Administrators.Where(x => x.Username == request.Username).SingleOrDefaultAsync();
+                var admin = await _dbContext.Visitors.Where(x => x.Username == request.Username).SingleOrDefaultAsync();
                 if (admin is null)
                     throw new BadRequestException(_messageLanguage.GetLabels(MessageCodeConstant.UsernameNotFound));
 
@@ -49,8 +49,8 @@ namespace Booking.Application.Features.Authorizations.Commands
                 {
                     Id = admin.Id,
                     Username = admin.Username,
-                    Name = admin.Username,
-                    Role = Role.ADM
+                    Name = admin.Name,
+                    Role = Role.VST
                 };
             }
             catch (Exception ex)

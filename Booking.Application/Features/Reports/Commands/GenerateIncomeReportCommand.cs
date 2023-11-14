@@ -1,4 +1,5 @@
 ﻿using Booking.Application.Commons.Interfaces;
+using Booking.Domain.Constant;
 using Dapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -26,27 +27,30 @@ namespace Booking.Application.Features.Reports.Commands
 
         public async Task<Unit> Handle(GenerateIncomeReportCommand request, CancellationToken cancellationToken)
         {
+            var reportName = $"report_income_{request.Period.ToString("yyyy_MM")}_view";
+
             var param = new DynamicParameters();
-            param.Add("@period", request.Period.ToString("yyyy_MM"));
+            param.Add("@report", reportName);
 
             using var conn = _dapperContext.CreateConnection();
             conn.Open();
 
             try
             {
-                var queryRefreshMV = $"refresh materialized view report_income_@period_view;";
-                
+                var queryRefreshMV = $"refresh materialized view {reportName};";
+
                 await conn.ExecuteAsync(queryRefreshMV, param);
 
                 return Unit.Value;
             }
-            catch
+            catch (Exception ex)
             {
-                var queryCreateMV = $"create materialized view report_income_@period_view as " +
-                                    $"select hrb.\"BookingDate\", count(hrb.\"Id\") as \"TotalRoomBooked\", sum(hr.\"Price\") as \"TotalIncome\" " +
-                                    $"from \"HotelRoomBooking\" hrb " +
-                                    $"inner join \"HotelRoom\" hr on hr.\"Id\" = hrb.\"RoomId\" " +
+                var queryCreateMV = $"create materialized view {reportName} as " +
+                                    $"select hrb.\"BookingDate\"::date, count(hrb.\"Id\") as \"TotalRoomBooked\", sum(hr.\"Price\") as \"TotalIncome\" " +
+                                    $"from \"{AppTable.HotelRoomBooking}\" hrb " +
+                                    $"inner join \"{AppTable.HotelRoom}\" hr on hr.\"Id\" = hrb.\"RoomId\" " +
                                     $"where extract('month' from hrb.\"BookingDate\") = '{request.Period.Month}' and extract('year' from hrb.\"BookingDate\") = '{request.Period.Year}' " +
+                                    $"group by hrb.\"BookingDate\"::date " +
                                     $"with data;";
 
                 await conn.ExecuteAsync(queryCreateMV, param);

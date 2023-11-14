@@ -8,7 +8,6 @@ namespace Booking.Application.Features.HotelRoomBookings.Valildators
         public GetHotelRoomAvailabilityQueryValidator()
         {
             RuleFor(x => x.Date).NotNull().NotEmpty();
-            RuleFor(x => x.GetData).NotNull().NotEmpty();
         }
     }
 }

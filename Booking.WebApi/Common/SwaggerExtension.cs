@@ -9,7 +9,7 @@ namespace Booking.WebApi.Common
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(opt =>
             {
-                //opt.OperationFilter<AcceptLanguageHeaderParameter>();
+                opt.OperationFilter<AcceptLanguageHeaderParameter>();
                 opt.OperationFilter<AddAuthorizationHeaderOperationFilter>();
                 opt.OperationFilter<AddDefaultPaginationQueryParametersOperationFilter>();
 

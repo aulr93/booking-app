@@ -1,8 +1,6 @@
 ﻿using Booking.Application.Common.Exceptions;
 using Booking.Application.Commons.Constants;
 using Booking.Application.Commons.Interfaces;
-using Booking.Application.Commons.Resources;
-using Booking.Application.Commons.Services;
 using Booking.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

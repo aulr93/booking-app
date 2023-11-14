@@ -19,8 +19,8 @@ namespace Booking.WebApi
 
             services.AddHttpContextAccessor();
 
-            services.AddControllersWithViews(opt => opt.Filters.Add<ApiExceptionFilterAttribute>());
-            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+            //services.AddControllersWithViews(opt => opt.Filters.Add<ApiExceptionFilterAttribute>());
+            //services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
             services.AddRazorPages();
 

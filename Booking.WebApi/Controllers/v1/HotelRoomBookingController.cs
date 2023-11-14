@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Booking.WebApi.Controllers.v1
 {
     [Authorize]
-    [RolePermission(Role.VST)]
     public class HotelRoomBookingController : BaseController
     {
+        [RolePermission(Role.VST)]
         [ResponseType(type: typeof(PaginationResult<HotelRoomAvailabilityVM>), statusCode: StatusCodes.Status200OK)]
         [HttpGet(template: "availability-list")]
         public async Task<IActionResult> GetPageAvailablity([FromQuery] GetHotelRoomAvailabilityRequest request)
@@ -24,6 +24,7 @@ namespace Booking.WebApi.Controllers.v1
             return Wrapper(val: await Mediator.Send(query));
         }
 
+        [RolePermission(Role.VST)]
         [ResponseType(type: typeof(PaginationResult<HotelRoomBookingVM>), statusCode: StatusCodes.Status200OK)]
         [HttpGet(template: "booking-list")]
         public async Task<IActionResult> GetPageBooking([FromQuery] GetHotelRoomBookingRequest request)
@@ -33,6 +34,7 @@ namespace Booking.WebApi.Controllers.v1
             return Wrapper(val: await Mediator.Send(query));
         }
 
+        [RolePermission(Role.VST)]
         [ResponseType(type: typeof(Unit), statusCode: StatusCodes.Status200OK)]
         [HttpPost(template: "booking")]
         public async Task<IActionResult> Booking([FromBody] BookingRoomRequest request)
@@ -42,6 +44,7 @@ namespace Booking.WebApi.Controllers.v1
             return Wrapper(val: await Mediator.Send(command));
         }
 
+        [RolePermission(Role.VST)]
         [ResponseType(type: typeof(HotelRoomBookingVM), statusCode: StatusCodes.Status200OK)]
         [HttpGet(template: "booking-detail")]
         public async Task<IActionResult> GetBookingDetail([FromQuery] GetDetailHotelRoomBookingRequest request)
@@ -51,6 +54,7 @@ namespace Booking.WebApi.Controllers.v1
             return Wrapper(val: await Mediator.Send(query));
         }
 
+        [RolePermission(Role.ADM)]
         [ResponseType(type: typeof(Unit), statusCode: StatusCodes.Status200OK)]
         [HttpPut(template: "check-in-out")]
         public async Task<IActionResult> CheckIn([FromBody] CheckInOutRequest request)

@@ -7,6 +7,5 @@
         public string Type { get; set; } = string.Empty;
         public int Floor { get; set; }
         public int Price { get; set; }
-        public bool IsAvailable { get; set; }
     }
 }

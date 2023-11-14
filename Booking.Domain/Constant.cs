@@ -1,9 +1,7 @@
 ﻿namespace Booking.Domain
 {
-    public static class TableStatus
+    public static class DomainConstant
     {
-        public const char DELETED = 'D';
-        public const char ACTIVE = 'A';
-        public const char MODIFIED = 'M';
+        public const string DEFAULT_PERFORMER = "SYSTEM";
     }
 }

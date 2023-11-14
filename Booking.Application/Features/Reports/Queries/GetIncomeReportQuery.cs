@@ -29,8 +29,10 @@ public class GetIncomeReportQueryHandler : IRequestHandler<GetIncomeReportQuery,
 
     public async Task<IEnumerable<GetIncomeReportVM>> Handle(GetIncomeReportQuery request, CancellationToken cancellationToken)
     {
+        var reportName = $"report_income_{request.Period.ToString("yyyy_MM")}_view";
+
         var param = new DynamicParameters();
-        param.Add("@period", request.Period.ToString("yyyy_MM"));
+        param.Add("@report", $"\"report_income_{request.Period.ToString("yyyy_MM")}_view\"");
 
         using var conn = _dapperContext.CreateConnection();
         conn.Open();
@@ -38,7 +40,7 @@ public class GetIncomeReportQueryHandler : IRequestHandler<GetIncomeReportQuery,
         try
         {
             var query = $"select \"BookingDate\", \"TotalRoomBooked\", \"TotalIncome\" " +
-                        $"from report_income_@period_view " +
+                        $"from {reportName} " +
                         $"order by \"BookingDate\" asc;";
 
             var result = await conn.QueryAsync<GetIncomeReportVM>(query, param);
@@ -47,6 +49,9 @@ public class GetIncomeReportQueryHandler : IRequestHandler<GetIncomeReportQuery,
         }
         catch (Exception ex)
         {
+            if (ex.Message.ToLower().Contains("does not exist"))
+                throw new Exception("Laporan belum di buat.");
+
             throw new Exception(ex.Message);
         }
         finally

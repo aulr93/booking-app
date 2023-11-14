@@ -1,8 +1,6 @@
 ﻿using Booking.Application.Common.Exceptions;
 using Booking.Application.Commons.Constants;
-using Booking.Application.Commons.Helpers;
 using Booking.Application.Commons.Interfaces;
-using Booking.Application.Commons.Services;
 using Booking.Common;
 using Booking.Common.Extensions;
 using Booking.Domain.Entities.Masters;
@@ -56,6 +54,7 @@ namespace Booking.Application.Features.Administrators.Commands
                     Username = request.Username,
                     Salt = Encoding.Default.GetBytes(salt),
                     HashedPassword = (password + salt).ToSHA512(),
+                    UserIn = adminID.ToString()
                 });
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
