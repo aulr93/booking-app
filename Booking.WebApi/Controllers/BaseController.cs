@@ -1,4 +1,6 @@
-﻿using Booking.Application.Commons.Models;
+﻿using AutoMapper;
+using Booking.Application.Commons.Models;
+using Booking.WebApi.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -10,26 +12,12 @@ namespace Booking.WebApi.Controllers
     public class BaseController : Controller
     {
         private IMediator _mediator;
-        private DateTime _start;
+        private ApplicationJwtManager _applicationJwtManager;
 
-        protected IMediator Mediator
-        {
-            get
-            {
-                return _mediator ?? (_mediator = HttpContext.RequestServices.GetService<IMediator>());
-            }
-        }
+        protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+        protected ApplicationJwtManager JwtManager => _applicationJwtManager ??= HttpContext.RequestServices.GetService<ApplicationJwtManager>();
+        protected IMapper Mapper => HttpContext.RequestServices.GetService<IMapper>();
 
-        public BaseController()
-        {
-            _start = DateTime.Now;
-        }
-
-        /// <summary>
-        /// Wrapper response
-        /// </summary>
-        /// <param name="val"></param>
-        /// <returns></returns>
         protected JsonResult Wrapper(object val, WrapperType wrapperType = WrapperType.OK)
         {
             Result<object> result = new Result<object>();

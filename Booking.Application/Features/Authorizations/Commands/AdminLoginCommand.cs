@@ -1,8 +1,6 @@
 ﻿using Booking.Application.Common.Exceptions;
-using Booking.Application.Commons.Authentications;
 using Booking.Application.Commons.Constants;
 using Booking.Application.Commons.Interfaces;
-using Booking.Application.Commons.Services;
 using Booking.Application.Features.Authorizations.Models;
 using Booking.Common.Extensions;
 using MediatR;
@@ -28,15 +26,12 @@ namespace Booking.Application.Features.Administrators.Commands
     {
         private readonly IApplicationDbContext _dbContext;
         private readonly IMessageLanguageService _messageLanguage;
-        private readonly IAuthenticationProvider _authenticationProvider;
 
         public AdminLoginCommandHandler(IApplicationDbContext dbContext,
-            IMessageLanguageService messageLanguage,
-            IAuthenticationProvider authenticationProvider)
+            IMessageLanguageService messageLanguage)
         {
             _dbContext = dbContext;
             _messageLanguage = messageLanguage;
-            _authenticationProvider = authenticationProvider;
         }
 
         public async Task<LoginVM> Handle(AdminLoginCommand request, CancellationToken cancellationToken)
@@ -52,12 +47,10 @@ namespace Booking.Application.Features.Administrators.Commands
 
                 return new LoginVM
                 {
-                    Token = _authenticationProvider.GetToken(new AuthUser
-                    {
-                        Id = admin.Id,
-                        Username = admin.Username,
-                        Role = Role.ADM
-                    }),
+                    Id = admin.Id,
+                    Username = admin.Username,
+                    Name = admin.Username,
+                    Role = Role.ADM
                 };
             }
             catch (Exception ex)

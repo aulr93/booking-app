@@ -1,15 +1,14 @@
-using Autofac.Core;
 using Booking.Application;
-using Booking.Application.Commons.Extensions;
-using Booking.Common.Interfaces;
+using Booking.Common;
 using Booking.Presistence;
 using Booking.WebApi;
-using Booking.WebApi.Commons;
+using Booking.WebApi.Common;
+using Booking.WebApi.Helpers;
 using Booking.WebApi.Services;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.OpenApi.Models;
-using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,29 +20,48 @@ builder.Configuration.AddJsonFile($"appsettings.{env}.json", optional: true, rel
 
 builder.Configuration.AddEnvironmentVariables();
 
-//var webAppConfig = new WebAppConfig();
-//builder.Configuration.GetSection(nameof(WebAppConfig)).Bind(webAppConfig);
+var webAppConfig = new WebAppConfig();
+builder.Configuration.GetSection(nameof(WebAppConfig)).Bind(webAppConfig);
+builder.Services.Configure<WebAppConfig>(builder.Configuration.GetSection(nameof(WebAppConfig)));
 
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-builder.Services.AddScoped<IMachineDateTime, MachineDateTime>();
-builder.Services.AddHttpClient();
-
+//builder.Services.AddHttpClient();
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddJsonWebTokenService(builder.Configuration);
+builder.Services.AddServices();
+
+builder.Services.AddTransient<CustomJwtAuthenticationHandler>();
+builder.Services.AddScoped<ApplicationJwtManager>();
 
 builder.Services.AddLocalization();
 
-builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(opt =>
+builder.Services.AddControllers(options =>
 {
-    opt.OperationFilter<AcceptLanguageHeaderParameter>();
+    options.Filters.Add(new ResultManipulator());
+
+    //options.Filters.Add(typeof(ModelValidationActionExecutingFilter));
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
 });
 
+builder.Services.AddCorsConfiguration();
+
+builder.Services.AddAuthentication(o =>
+{
+    o.DefaultScheme = CustomJwtAuthenticationOptions.DefaultSchemeName;
+    o.DefaultAuthenticateScheme = CustomJwtAuthenticationOptions.DefaultSchemeName;
+})
+.AddScheme<CustomJwtAuthenticationOptions, CustomJwtAuthenticationHandler>(CustomJwtAuthenticationOptions.DefaultSchemeName, opts => { });
+
+builder.Services.AddAuthorization(opts =>
+{
+    opts.DefaultPolicy = new AuthorizationPolicyBuilder()
+    .AddAuthenticationSchemes(CustomJwtAuthenticationOptions.DefaultSchemeName)
+    .RequireAuthenticatedUser()
+    .Build();
+});
+
+builder.Services.AddSwaggerVersioning();
+
+//------------------------------------ app builder ------------------------------------
 var app = builder.Build();
 
 string pathBase = Environment.GetEnvironmentVariable("ASPNETCORE_PATH_BASE") ?? string.Empty;
@@ -81,7 +99,9 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+app.UseCustomExceptionHandler();
+
+app.UseCors();
 
 app.UseAuthorization();
 

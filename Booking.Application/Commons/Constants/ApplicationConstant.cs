@@ -16,6 +16,14 @@
         };
     }
 
+    public static class ApplicationClaimConstant
+    {
+        public const string UserId = "app.claim.userid";
+        public const string Username = "app.claim.username";
+        public const string Email = "app.claim.email";
+        public const string Role = "app.claim.role";
+    }
+
     public static class Role
     {
         public const string ADM = "ADM";
