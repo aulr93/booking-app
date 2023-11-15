@@ -98,13 +98,30 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint($"{pathBase}/swagger/v2/swagger.json", "v2");
     });
 }
+else
+{
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
 
 app.UseCustomExceptionHandler();
+
+app.UseRouting();
 
 app.UseCors();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller}/{action=Index}/{id?}");
+
+// Configure the HTTP request pipeline.
+app.MapGet("/", () => $"api-booking-hotel service up {app.Environment.EnvironmentName} v.0.1");
 
 app.Run();

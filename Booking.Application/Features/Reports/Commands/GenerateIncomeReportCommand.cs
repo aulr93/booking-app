@@ -43,7 +43,7 @@ namespace Booking.Application.Features.Reports.Commands
 
                 return Unit.Value;
             }
-            catch (Exception ex)
+            catch
             {
                 var queryCreateMV = $"create materialized view {reportName} as " +
                                     $"select hrb.\"BookingDate\"::date, count(hrb.\"Id\") as \"TotalRoomBooked\", sum(hr.\"Price\") as \"TotalIncome\" " +
